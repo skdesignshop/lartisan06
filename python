@@ -1,0 +1,51 @@
+import os
+import telebot
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+
+# Token fourni pour @lartisan06bot
+TOKEN = "8906879876:AAEEmd-mC2WPKBJzNd5qrFFTOVDusoTeohc"
+bot = telebot.TeleBot(TOKEN)
+
+@bot.message_handler(commands=['start'])
+def send_welcome(message):
+    chat_id = message.chat.id
+    
+    # Image officielle de ton logo
+    photo_url = "https://raw.githubusercontent.com/skdesignshop/photo-image-/refs/heads/main/IMG_9326.jpeg"
+    
+    # Texte de bienvenue exact
+    caption = """Bienvenue sur le bot officiel de L'artisan06🛍️
+
+Disponible 24h/24 et 7j/7. 🕒
+
+📳 Besoin d'aide ? 
+Contactez-Nous : @lartisan06
+
+🚀 Accès direct à la mini app : Lancez l'application intégrée en un clin d'œil depuis le chat⬇️"""
+
+    # Création des boutons interactifs
+    markup = InlineKeyboardMarkup()
+    markup.row_width = 1
+    
+    # 1. Bouton MINI APPLICATION (Ouvre directement ta WebApp dans Telegram)
+    # Remplace l'URL ci-dessous par le lien direct de ta Mini App déployée (ex: GitHub Pages ou Replit)
+    btn_webapp = InlineKeyboardButton("🕹️ MINI APPLICATION", web_app={"url": "t.me/lartisan06bot/miniapp"})
+    
+    # 2. Bouton TELEGRAM
+    btn_telegram = InlineKeyboardButton("🌐 TELEGRAM", url="https://t.me/+MFHN9W_pqmNlODg8")
+    
+    # 3. Bouton WHATSAPP
+    btn_whatsapp = InlineKeyboardButton("✳️ WHATSAPP", url="https://wa.me/33628007778")
+    
+    # 4. Bouton POTATO
+    btn_potato = InlineKeyboardButton("🥔 POTATO", url="https://tato.im/lartisan06000")
+
+    # Ajout des boutons dans le message (dans l'ordre)
+    markup.add(btn_webapp, btn_telegram, btn_whatsapp, btn_potato)
+
+    # Envoi de la photo avec la légende et les boutons
+    bot.send_photo(chat_id, photo_url, caption=caption, reply_markup=markup)
+
+# Lancement du bot
+print("Le bot L'Artisan 06 est démarré...")
+bot.infinity_polling()
