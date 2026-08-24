@@ -3,11 +3,9 @@ import telebot
 from flask import Flask
 from threading import Thread
 
-# Token de ton bot @lartisan06bot
 TOKEN = "8906879876:AAEEmd-mC2WPKBJzNd5qrFFTOVDusoTeohc"
 bot = telebot.TeleBot(TOKEN)
 
-# Mini serveur web factice pour satisfaire Render (gratuit)
 app = Flask('')
 
 @app.route('/')
@@ -21,11 +19,9 @@ def keep_alive():
     t = Thread(target=run_flask)
     t.start()
 
-# Commande /start de ton bot
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     chat_id = message.chat.id
-    
     photo_url = "https://raw.githubusercontent.com/skdesignshop/photo-image-/refs/heads/main/IMG_9326.jpeg"
     
     caption = """Bienvenue sur le bot officiel de L'artisan06🛍️
