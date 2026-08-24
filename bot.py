@@ -1,23 +1,25 @@
 import os
 import telebot
-from flask import Flask
-from threading import Thread
+from flask import Flask, request
 
 TOKEN = "8906879876:AAEEmd-mC2WPKBJzNd5qrFFTOVDusoTeohc"
 bot = telebot.TeleBot(TOKEN)
+app = Flask(__name__)
 
-app = Flask('')
+# URL de ton site sur Render
+RENDER_URL = "https://lartisan06bot.onrender.com"
 
 @app.route('/')
 def home():
     return "Le bot L'Artisan 06 est en ligne !"
 
-def run_flask():
-    app.run(host='0.0.0.0', port=8080)
-
-def keep_alive():
-    t = Thread(target=run_flask)
-    t.start()
+# Route qui reçoit les messages de Telegram en temps réel
+@app.route(f'/{TOKEN}', methods=['POST'])
+def webhook():
+    json_str = request.get_data().decode('UTF-8')
+    update = telebot.types.Update.de_json(json_str)
+    bot.process_new_updates([update])
+    return "!", 200
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
@@ -45,5 +47,9 @@ Contactez-Nous : @lartisan06
     bot.send_photo(chat_id, photo_url, caption=caption, reply_markup=markup)
 
 if __name__ == "__main__":
-    keep_alive()
-    bot.infinity_polling()
+    # Configure automatiquement le webhook auprès de Telegram
+    bot.remove_webhook()
+    bot.set_webhook(url=f"{RENDER_URL}/{TOKEN}")
+    
+    # Lance le serveur Flask
+    app.run(host='0.0.0.0', port=8080)
